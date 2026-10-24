@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HERO TV — Living Room Smart Hub</title>
+  <style>
+    :root {
+      --bg-dark: #080612;
+      --bg-card: #140f2b;
+      --bg-surface: #1e173e;
+      --primary: #a855f7;
+      --primary-light: #c084fc;
+      --secondary: #38bdf8;
+      --accent-gold: #facc15;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --focus-ring: #c084fc;
+      --border-color: rgba(168, 85, 247, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      background: rgba(19, 15, 38, 0.90);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 20px;
+      color: white;
+      box-shadow: 0 0 16px rgba(168, 85, 247, 0.6);
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .pill-badge {
+      background: rgba(250, 204, 21, 0.15);
+      color: var(--accent-gold);
+      border: 1px solid rgba(250, 204, 21, 0.4);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .clock {
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--bg-surface);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    main {
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .focusable {
+      outline: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .focusable:focus,
+    .focusable:hover {
+      transform: scale(1.03);
+      border-color: var(--focus-ring) !important;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.45);
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      min-height: 280px;
+      background: linear-gradient(135deg, #181136, #090616);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 32px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 650px;
+    }
+
+    .hero-title {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    /* Unified Search Bar */
+    .search-box-container {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .search-input {
+      flex: 1;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-color);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+    }
+
+    .category-chips {
+      display: flex;
+      gap: 8px;
+    }
+
+    .chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .chip.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary-light);
+    }
+
+    /* Section Headers */
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .media-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 160px;
+    }
+
+    .media-card h3 {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .media-card p {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    /* App Shortcuts Grid */
+    .app-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .app-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    /* Diagnostics Banner */
+    .diagnostics-box {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1.5px solid rgba(245, 158, 11, 0.35);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .diagnostics-box h2 {
+      color: #fbbf24;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .diagnostics-box p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* Modal Player */
+    .player-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 24px;
+    }
+
+    .player-modal.active {
+      display: flex;
+    }
+
+    video {
+      max-width: 90vw;
+      max-height: 75vh;
+      border-radius: 16px;
+      box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
+    }
+
+    .player-close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TV Top Navigation Bar -->
+  <header>
+    <div class="brand">
+      <div class="logo-badge">H</div>
+      <div>
+        <h1>HERO TV</h1>
+        <span class="pill-badge">KSh 0 SMART TV PROTOTYPE</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="clock" id="clock">12:00 PM</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Featured Hero Banner -->
+    <div class="hero-banner">
+      <div class="hero-content">
+        <span class="pill-badge" style="color:#c084fc; border-color:#a855f7;">4K HDR • HARDWARE ACCELERATED</span>
+        <h2 class="hero-title">Cosmic Horizon: Odyssey</h2>
+        <p class="hero-desc">
+          Experience an ultra-deep black and violet 10-foot entertainment interface engineered for repurposed Android 6–9 devices.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-primary focusable" onclick="playSample('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4')">▶ Play Now</button>
+          <label class="btn-secondary focusable" style="display:inline-block; cursor:pointer;">
+            📂 Pick Local Video
+            <input type="file" id="localFileInput" accept="video/*,audio/*" style="display:none;" onchange="handleLocalFile(event)">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unified Search & Category Filtering -->
+    <div class="search-box-container">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search local media and application shortcuts..." oninput="handleSearch(this.value)">
+      <div class="category-chips">
+        <div class="chip active" onclick="setCategory('all', this)">All</div>
+        <div class="chip" onclick="setCategory('movies', this)">Movies</div>
+        <div class="chip" onclick="setCategory('music', this)">Music</div>
+        <div class="chip" onclick="setCategory('videos', this)">Videos</div>
+      </div>
+    </div>
+
+    <!-- Critical USB Hardware Reality Section -->
+    <div class="diagnostics-box focusable" tabindex="0">
+      <h2>⚠️ THE PHYSICAL TRUTH: USB-TO-TV CONNECTION</h2>
+      <p>
+        <strong>Fact:</strong> Standard TV USB-A ports operate strictly as Flash Memory Host readers (decoding FAT32/NTFS storage). They <em>cannot</em> receive live video streams over a normal phone USB charging cable because the TV hardware lacks an HDMI receiver on those pins.
+        <br><br>
+        <strong>Working KSh 0 Alternative:</strong> Put your phone into <em>File Transfer (MTP)</em> mode so the TV browses and plays your movies directly, or run Hero TV on the phone screen with a wireless mouse from the sofa!
+      </p>
+    </div>
+
+    <!-- Media Library Row -->
+    <div>
+      <div class="section-title">
+        <span>Media Library</span>
+        <span style="font-size:12px; color:var(--text-muted);" id="mediaCount">6 Items</span>
+      </div>
+      <div class="card-grid" id="mediaGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- App Shortcuts Row -->
+    <div>
+      <div class="section-title">
+        <span>Application Shortcuts</span>
+        <span style="font-size:12px; color:var(--text-muted);">Launch on Phone</span>
+      </div>
+      <div class="card-grid" id="appsGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Video Player Modal -->
+  <div class="player-modal" id="playerModal">
+    <button class="player-close focusable" onclick="closePlayer()">✕ Exit Player</button>
+    <video id="videoElement" controls autoplay></video>
+  </div>
+
+  <script>
+    const mediaItems = [
+      { id: 1, title: 'Cosmic Horizon', cat: 'movies', sub: 'Sci-Fi • 4K HDR', duration: '1h 48m', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' },
+      { id: 2, title: 'Cyber Synthwave Live', cat: 'music', sub: 'Concert • Dolby Audio', duration: '52m', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' },
+      { id: 3, title: 'The Android Matrix', cat: 'videos', sub: 'Tech Documentary • 1080p', duration: '34m', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4' },
+      { id: 4, title: 'Sunset on the Mara', cat: 'movies', sub: 'Wildlife • 4K 60fps', duration: '1h 15m', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4' },
+      { id: 5, title: 'Retro Arcade Legends', cat: 'videos', sub: 'Gaming • 1080p', duration: '45m', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4' },
+      { id: 6, title: 'Lo-Fi Chill Beats', cat: 'music', sub: 'Continuous Stream', duration: '2h 10m', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4' }
+    ];
+
+    const appShortcuts = [
+      { name: 'Hero Player', icon: '▶', cat: 'Media', action: 'internal' },
+      { name: 'YouTube', icon: '📺', cat: 'Streaming', action: 'youtube' },
+      { name: 'Netflix', icon: '🎬', cat: 'Streaming', action: 'netflix' },
+      { name: 'File Explorer', icon: '📁', cat: 'Utilities', action: 'files' },
+      { name: 'Web Browser', icon: '🌐', cat: 'Utilities', action: 'browser' },
+      { name: 'Photo Slideshow', icon: '🖼', cat: 'Media', action: 'photos' }
+    ];
+
+    let currentCategory = 'all';
+    let searchQuery = '';
+
+    function renderMedia() {
+      const grid = document.getElementById('mediaGrid');
+      grid.innerHTML = '';
+      const filtered = mediaItems.filter(item => {
+        const matchesCat = currentCategory === 'all' || item.cat === currentCategory;
+        const matchesSearch = !searchQuery || item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.sub.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCat && matchesSearch;
+      });
+
+      document.getElementById('mediaCount').innerText = `${filtered.length} Items`;
+
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'media-card focusable';
+        div.tabIndex = 0;
+        div.onclick = () => playSample(item.url);
+        div.innerHTML = `
+          <span class="pill-badge" style="width:fit-content;">${item.cat.toUpperCase()}</span>
+          <div>
+            <h3>${item.title}</h3>
+            <p>${item.sub} • ${item.duration}</p>
+          </div>
+          <span style="color:var(--primary-light); font-size:12px; font-weight:bold;">Play ▶</span>
+        `;
+        grid.appendChild(div);
+      });
+      refreshFocusables();
+    }
+
+    function renderApps() {
+      const grid = document.getElementById('appsGrid');
+      grid.innerHTML = '';
+      const filtered = appShortcuts.filter(app => {
+        return !searchQuery || app.name.toLowerCase().includes(searchQuery.toLowerCase()) || app.cat.toLowerCase().includes(searchQuery.toLowerCase());
+      });
+
+      filtered.forEach(app => {
+        const div = document.createElement('div');
+        div.className = 'app-card focusable';
+        div.tabIndex = 0;
+        div.onclick = () => {
+          if (app.action === 'internal') playSample(mediaItems[0].url);
+          else alert(`Launching ${app.name} on host device...`);
+        };
+        div.innerHTML = `
+          <div class="app-icon">${app.icon}</div>
+          <div>
+            <h4 style="font-size:14px; font-weight:bold;">${app.name}</h4>
+            <p style="font-size:11px; color:var(--text-muted);">${app.cat}</p>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+      refreshFocusables();
+    }
+
+    function handleSearch(q) {
+      searchQuery = q.trim();
+      renderMedia();
+      renderApps();
+    }
+
+    function setCategory(cat, el) {
+      currentCategory = cat;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      renderMedia();
+    }
+
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' • Living Room Mode';
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function playSample(url) {
+      const modal = document.getElementById('playerModal');
+      const video = document.getElementById('videoElement');
+      video.src = url;
+      modal.classList.add('active');
+      video.play();
+    }
+
+    function handleLocalFile(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const fileUrl = URL.createObjectURL(file);
+        playSample(fileUrl);
+      }
+    }
+
+    function closePlayer() {
+      const modal = document.getElementById('playerModal');
+      const video = document.getElementById('videoElement');
+      video.pause();
+      video.src = '';
+      modal.classList.remove('active');
+    }
+
+    let focusableElements = [];
+    let currentFocusIndex = 0;
+
+    function refreshFocusables() {
+      focusableElements = Array.from(document.querySelectorAll('.focusable'));
+    }
+
+    window.addEventListener('keydown', (e) => {
+      refreshFocusables();
+      if (!focusableElements.length) return;
+
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        currentFocusIndex = (currentFocusIndex + 1) % focusableElements.length;
+        focusableElements[currentFocusIndex].focus();
+        e.preventDefault();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        currentFocusIndex = (currentFocusIndex - 1 + focusableElements.length) % focusableElements.length;
+        focusableElements[currentFocusIndex].focus();
+        e.preventDefault();
+      } else if (e.key === 'Escape') {
+        closePlayer();
+      }
+    });
+
+    renderMedia();
+    renderApps();
+  </script>
+</body>
+</html>

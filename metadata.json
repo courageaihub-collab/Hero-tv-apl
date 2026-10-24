@@ -1,0 +1,6 @@
+{
+  "name": "Hero TV",
+  "description": "Transform an old Android phone into a full Smart TV interface with media player, local app launcher, TV remote controls, and real-world USB TV diagnostics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
